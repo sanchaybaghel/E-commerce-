@@ -1,6 +1,3 @@
-// Firebase configuration using client-side verification only
-// This bypasses the Admin SDK private key issues completely
-
 let axios;
 try {
   axios = require('axios');
@@ -13,12 +10,11 @@ const firebaseConfig = {
   initialized: false
 };
 
-// Verify Firebase ID token using Google's public endpoint
 async function verifyFirebaseIdToken(idToken) {
-  // Try axios method first if available
+
   if (axios && process.env.FIREBASE_WEB_API_KEY) {
     try {
-      // Use Google's token verification endpoint
+
       const response = await axios.post(
         `https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=${process.env.FIREBASE_WEB_API_KEY}`,
         { idToken: idToken },
@@ -45,25 +41,20 @@ async function verifyFirebaseIdToken(idToken) {
     }
   }
 
-  // Fallback: Simple token validation without external API
   console.log('Using fallback token validation...');
-
-  // Basic token structure validation
   if (!idToken || typeof idToken !== 'string') {
     throw new Error('Invalid token format');
   }
 
-  // Split JWT token to get payload
   const parts = idToken.split('.');
   if (parts.length !== 3) {
     throw new Error('Invalid token structure');
   }
 
   try {
-    // Decode payload (without verification for now)
+
     const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
 
-    // Basic validation
     if (!payload.aud || payload.aud !== firebaseConfig.projectId) {
       throw new Error('Invalid audience');
     }
@@ -83,22 +74,18 @@ async function verifyFirebaseIdToken(idToken) {
   }
 }
 
-// Initialize Firebase configuration
 function initializeFirebase() {
   if (process.env.FIREBASE_PROJECT_ID) {
     firebaseConfig.projectId = process.env.FIREBASE_PROJECT_ID;
     firebaseConfig.initialized = true;
-    console.log('✅ Firebase client-side verification initialized');
-    console.log('Project ID:', firebaseConfig.projectId);
     return true;
   } else {
     console.log('⚠️  Firebase not configured - using fallback authentication');
-    firebaseConfig.initialized = true; // Still allow fallback
+    firebaseConfig.initialized = true;
     return true;
   }
 }
 
-// Initialize on module load
 const initialized = initializeFirebase();
 
 module.exports = {
