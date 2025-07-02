@@ -38,13 +38,29 @@ Add these environment variables in Render (use your actual values from .env file
 ### Required Variables:
 ```
 MONGO_URI=your_mongodb_connection_string
-FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_PROJECT_ID=e-commerce-project-c6e7a
 FIREBASE_SERVICE_ACCOUNT_KEY=your_base64_encoded_service_account_key
 STRIPE_SECRET_KEY=your_stripe_secret_key
 STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 FRONTEND_URL=https://your-frontend-domain.com
 PORT=5000
 ```
+
+### 🔑 Firebase Service Account Key Setup:
+
+**Option 1: Use the encoding script**
+```bash
+cd server
+node scripts/encode-firebase-key.js config/serviceAccountKey.json
+```
+
+**Option 2: Manual encoding**
+```bash
+# Encode your service account key file to base64
+base64 -i server/config/serviceAccountKey.json
+```
+
+Copy the output and use it as the `FIREBASE_SERVICE_ACCOUNT_KEY` value.
 
 ### Optional Variables:
 ```
