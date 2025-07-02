@@ -5,7 +5,8 @@ const Product = require('./models/Product');
 require('dotenv').config();
 
 
-require('./config/firebase');
+// Initialize Firebase client-side verification (bypasses Admin SDK issues)
+require('./config/firebase-client');
 
 const app = express();
 
