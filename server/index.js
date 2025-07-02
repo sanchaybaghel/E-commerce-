@@ -20,7 +20,7 @@ app.use(cors({
 app.use(express.json());
 
 
-// Health check endpoint
+
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'E-commerce API is running successfully',
@@ -29,10 +29,6 @@ app.get('/', (req, res) => {
   });
 });
 
-// Health check for Render
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'healthy' });
-});
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/protected', require('./routes/protectedroute'));
@@ -53,7 +49,6 @@ mongoose.connect(process.env.MONGO_URI)
     console.log('MongoDB connected successfully');
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
-      console.log('Environment:', process.env.NODE_ENV || 'development');
     });
   })
   .catch(err => {
