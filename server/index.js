@@ -4,7 +4,7 @@ const cors = require('cors');
 const Product = require('./models/Product');
 require('dotenv').config();
 
-// Initialize Firebase Admin SDK
+
 require('./config/firebase');
 
 const app = express();
