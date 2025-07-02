@@ -57,14 +57,38 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
 } else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
   // Alternative: use individual environment variables (often more reliable)
   console.log('Using individual Firebase environment variables...');
-  let privateKey = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n').trim();
+  let privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
-  // Ensure proper PEM format
-  if (!privateKey.startsWith('-----BEGIN PRIVATE KEY-----')) {
-    privateKey = '-----BEGIN PRIVATE KEY-----\n' + privateKey;
-  }
-  if (!privateKey.endsWith('-----END PRIVATE KEY-----')) {
-    privateKey = privateKey + '\n-----END PRIVATE KEY-----';
+  // Handle different private key formats
+  if (privateKey) {
+    // Replace escaped newlines with actual newlines
+    privateKey = privateKey.replace(/\\n/g, '\n');
+
+    // Remove any extra whitespace
+    privateKey = privateKey.trim();
+
+    // Handle base64 encoded private key (some platforms encode it)
+    if (!privateKey.includes('-----BEGIN') && privateKey.length > 1000) {
+      try {
+        privateKey = Buffer.from(privateKey, 'base64').toString('utf8');
+        console.log('Decoded base64 private key');
+      } catch (e) {
+        console.log('Private key is not base64 encoded');
+      }
+    }
+
+    // Ensure proper PEM format
+    if (!privateKey.startsWith('-----BEGIN PRIVATE KEY-----')) {
+      privateKey = '-----BEGIN PRIVATE KEY-----\n' + privateKey;
+    }
+    if (!privateKey.endsWith('-----END PRIVATE KEY-----')) {
+      privateKey = privateKey + '\n-----END PRIVATE KEY-----';
+    }
+
+    // Fix line endings and spacing
+    privateKey = privateKey.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    privateKey = privateKey.replace(/-----BEGIN PRIVATE KEY-----\s*/, '-----BEGIN PRIVATE KEY-----\n');
+    privateKey = privateKey.replace(/\s*-----END PRIVATE KEY-----/, '\n-----END PRIVATE KEY-----');
   }
 
   serviceAccount = {
