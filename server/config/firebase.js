@@ -9,6 +9,12 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
     const decodedKey = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_KEY, 'base64').toString();
     console.log('Decoded key length:', decodedKey.length);
     serviceAccount = JSON.parse(decodedKey);
+
+    // Fix private key formatting - replace \\n with actual newlines
+    if (serviceAccount.private_key) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+    }
+
     console.log('Service account parsed successfully. Project ID:', serviceAccount.project_id);
   } catch (error) {
     console.error('Error parsing Firebase service account key:', error.message);
