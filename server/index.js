@@ -4,22 +4,16 @@ const cors = require('cors');
 const Product = require('./models/Product');
 require('dotenv').config();
 
-
-// Initialize Firebase client-side verification (bypasses Admin SDK issues)
 require('./config/firebase-client');
 
 const app = express();
-
-
 app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
-
 app.use(cors({
-  origin:'https://e-commerce-bjhg.vercel.app' || 'http://localhost:3000',
+  origin:'http://localhost:3000',
   credentials: true
 }));
 app.use(express.json());
-
 
 
 app.get('/', (req, res) => {
