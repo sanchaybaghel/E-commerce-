@@ -10,7 +10,7 @@ const app = express();
 app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
 app.use(cors({
-  origin:'https://e-commerce-bjhg.vercel.app',
+  origin: ['https://e-commerce-bjhg-git-main-sanchay-baghels-projects.vercel.app', 'http://localhost:3000'],
   credentials: true
 }));
 app.use(express.json());
