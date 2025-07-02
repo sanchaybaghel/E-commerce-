@@ -1,7 +1,8 @@
 const admin = require('firebase-admin');
 
-// Initialize Firebase Admin SDK
+// Initialize Firebase Admin SDK with timeout protection
 let serviceAccount;
+let firebaseInitialized = false;
 
 if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
   try {
@@ -85,13 +86,77 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
 }
 
 try {
+  // Additional validation before Firebase initialization
+  if (serviceAccount.private_key) {
+    const crypto = require('crypto');
+    try {
+      // Test if the private key can be parsed by Node.js crypto
+      crypto.createPrivateKey(serviceAccount.private_key);
+      console.log('Private key validation successful');
+    } catch (cryptoError) {
+      console.error('Private key crypto validation failed:', cryptoError.message);
+
+      // Try to fix common DER parsing issues
+      let fixedKey = serviceAccount.private_key;
+
+      // Ensure proper line endings
+      fixedKey = fixedKey.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+      // Remove any extra spaces or characters
+      fixedKey = fixedKey.trim();
+
+      // Ensure exactly one newline after header and before footer
+      fixedKey = fixedKey.replace(/-----BEGIN PRIVATE KEY-----\s*/, '-----BEGIN PRIVATE KEY-----\n');
+      fixedKey = fixedKey.replace(/\s*-----END PRIVATE KEY-----/, '\n-----END PRIVATE KEY-----');
+
+      serviceAccount.private_key = fixedKey;
+
+      // Test again
+      try {
+        crypto.createPrivateKey(serviceAccount.private_key);
+        console.log('Private key fixed and validated successfully');
+      } catch (secondError) {
+        console.error('Unable to fix private key:', secondError.message);
+        throw secondError;
+      }
+    }
+  }
+
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   });
+  firebaseInitialized = true;
   console.log('Firebase Admin SDK initialized successfully');
 } catch (error) {
   console.error('Error initializing Firebase Admin SDK:', error.message);
-  process.exit(1);
+  console.error('This might be due to private key formatting issues');
+
+  // Try alternative initialization method for production
+  if (process.env.NODE_ENV === 'production' && process.env.FIREBASE_PROJECT_ID) {
+    try {
+      console.log('Attempting alternative Firebase initialization...');
+      admin.initializeApp({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+      });
+      firebaseInitialized = true;
+      console.log('Firebase initialized with project ID only (limited functionality)');
+    } catch (altError) {
+      console.error('Alternative initialization also failed:', altError.message);
+      firebaseInitialized = false;
+    }
+  } else {
+    firebaseInitialized = false;
+  }
+
+  if (!firebaseInitialized) {
+    // Don't exit the process - let the server start without Firebase for now
+    console.log('⚠️  Server will continue without Firebase Admin SDK');
+    console.log('Please check your Firebase configuration and restart');
+  }
 }
 
-module.exports = admin;
+// Export admin with initialization status
+module.exports = {
+  admin,
+  isInitialized: () => firebaseInitialized
+};
