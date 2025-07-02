@@ -9,10 +9,19 @@ require('./config/firebase-client');
 const app = express();
 app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
-app.use(cors({
-  origin: ['https://e-commerce-bjhg-git-main-sanchay-baghels-projects.vercel.app', 'http://localhost:3000'],
-  credentials: true
-}));
+const corsOptions = {
+  origin: [
+    'https://e-commerce-bjhg-git-main-sanchay-baghels-projects.vercel.app',
+    'https://e-commerce-bjhg.vercel.app',
+    'http://localhost:3000'
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+  allowedHeaders: 'Content-Type,Authorization'
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 
