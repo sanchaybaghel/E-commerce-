@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: 'https://e-commerce-h7qv.onrender.com',
   withCredentials: true // <-- add this line
 });
 
