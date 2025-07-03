@@ -15,7 +15,7 @@ app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
 
 app.use(cors({
-  origin:'http://localhost:3000',
+  origin:'https://e-commerce-bjhg.vercel.app/',
   credentials: true
 }));
 app.use(express.json());
