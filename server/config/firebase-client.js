@@ -76,9 +76,9 @@ async function verifyFirebaseIdToken(idToken) {
 }
 
 function initializeFirebase() {
-  // console.log("prces",process.env)
-  // console.log("process.env.FIREBASE_PROJECT_ID",process.env.FIREBASE_PROJECT_ID)
-  // console.log("process.env.FIREBASE_WEB_API_KEY",process.env.FIREBASE_WEB_API_KEY)
+  console.log("prces",process.env)
+  console.log("process.env.FIREBASE_PROJECT_ID",process.env.FIREBASE_PROJECT_ID)
+  console.log("process.env.FIREBASE_WEB_API_KEY",process.env.FIREBASE_WEB_API_KEY)
   if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_WEB_API_KEY) {
     firebaseConfig.projectId = process.env.FIREBASE_PROJECT_ID;
     firebaseConfig.initialized = true;
