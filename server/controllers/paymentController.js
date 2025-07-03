@@ -20,6 +20,7 @@ exports.createPaymentIntent = async (req, res) => {
 
     res.json({ clientSecret: paymentIntent.client_secret });
   } catch (err) {
+    console.log("err in create payment intent", err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -57,7 +58,7 @@ exports.createCheckoutSession = async (req, res) => {
 
     res.json({ id: session.id });
   } catch (err) {
-    console.log("err", err.message);
+    console.log("err in create checkout session", err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -217,6 +218,7 @@ exports.stripeWebhook = async (req, res) => {
       }
 
     } catch (error) {
+     
       console.error('Webhook processing error:', error.message);
     }
   }
