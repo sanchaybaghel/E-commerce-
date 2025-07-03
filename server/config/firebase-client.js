@@ -75,14 +75,14 @@ async function verifyFirebaseIdToken(idToken) {
 }
 
 function initializeFirebase() {
-  if (process.env.FIREBASE_PROJECT_ID) {
+  if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_WEB_API_KEY) {
     firebaseConfig.projectId = process.env.FIREBASE_PROJECT_ID;
     firebaseConfig.initialized = true;
     return true;
   } else {
-    console.log('⚠️  Firebase not configured - using fallback authentication');
-    firebaseConfig.initialized = true;
-    return true;
+    console.log('⚠️  Firebase not fully configured. Authentication might be limited or fail.');
+    firebaseConfig.initialized = false;
+    return false;
   }
 }
 
