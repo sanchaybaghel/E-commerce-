@@ -70,7 +70,7 @@ function RegisterPage() {
             checked={form.role === 'admin'}
             onChange={e => setForm({ ...form, role: e.target.checked ? 'admin' : 'customer' })}
           />
-          <label>Register as admin (dev only)</label>
+          <label>Register as admin (Admin only)</label>
         </div>
         <button
           className="bg-blue-600 text-white px-4 py-2 rounded w-full"
