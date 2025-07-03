@@ -35,27 +35,35 @@ exports.createCheckoutSession = async (req, res) => {
       return res.status(400).json({ message: 'Not enough stock available' });
     }
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [{
-        price_data: {
-          currency: 'inr',
-          product_data: { name: product.name },
-          unit_amount: product.price * 100,
-        },
-        quantity,
-      }],
-      mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL || 'https://e-commerce-bjhg.vercel.app'}/success`,
-      cancel_url: `${process.env.FRONTEND_URL || 'https://e-commerce-bjhg.vercel.app'}/cancel`,
-      metadata: {
-        productId: product._id.toString(),
-        quantity: quantity.toString(),
-        userId: userId._id.toString(),
-        type: 'single_product'
-      }
-    });
+    function withHttps(url) {
+  if (!/^https?:\/\//i.test(url)) {
+    return 'https://' + url;
+  }
+  return url;
+}
 
+const frontendUrl = withHttps(process.env.FRONTEND_URL || 'https://e-commerce-bjhg.vercel.app');
+
+const session = await stripe.checkout.sessions.create({
+  payment_method_types: ['card'],
+  line_items: [{
+    price_data: {
+      currency: 'inr',
+      product_data: { name: product.name },
+      unit_amount: product.price * 100,
+    },
+    quantity,
+  }],
+  mode: 'payment',
+  success_url: `${frontendUrl}/success`,
+  cancel_url: `${frontendUrl}/cancel`,
+  metadata: {
+    productId: product._id.toString(),
+    quantity: quantity.toString(),
+    userId: userId._id.toString(),
+    type: 'single_product'
+  }
+});
     res.json({ id: session.id });
   } catch (err) {
     console.log("err in create checkout session", err.message);
