@@ -18,6 +18,7 @@ app.use(cors({
   origin:'https://e-commerce-bjhg.vercel.app',
   credentials: true
 }));
+app.options('*', cors());
 app.use(express.json());
 
 
