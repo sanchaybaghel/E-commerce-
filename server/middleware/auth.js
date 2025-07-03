@@ -2,6 +2,7 @@ const { verifyIdToken, isInitialized } = require('../config/firebase-client');
 
 const firebaseAuth = async (req, res, next) => {
   if (!isInitialized()) {
+    console.log("Firebase not initialized",isInitialized())
     return res.status(500).json({ message: 'Firebase not properly configured on the server.' });
   }
   const token = req.headers.authorization?.split(' ')[1];

@@ -18,7 +18,6 @@ app.use(cors({
   origin:'https://e-commerce-bjhg.vercel.app',
   credentials: true
 }));
-app.options('*', cors());
 app.use(express.json());
 
 
@@ -43,13 +42,14 @@ app.use('/api/orders', require('./routes/order'));
 
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT 
 
 // MongoDB connection and server start
+
 mongoose.connect(process.env.MONGO_URI)
   .then(async () => {
     console.log('MongoDB connected successfully');
-    app.listen(PORT, '0.0.0.0', () => {
+    app.listen(PORT,'0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
     });
   })

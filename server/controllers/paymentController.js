@@ -45,8 +45,8 @@ exports.createCheckoutSession = async (req, res) => {
         quantity,
       }],
       mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/success`,
-      cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/cancel`,
+      success_url: `${process.env.FRONTEND_URL || 'https://e-commerce-bjhg.vercel.app'}/success`,
+      cancel_url: `${process.env.FRONTEND_URL || 'https://e-commerce-bjhg.vercel.app'}/cancel`,
       metadata: {
         productId: product._id.toString(),
         quantity: quantity.toString(),
@@ -95,8 +95,8 @@ exports.createCartCheckoutSession = async (req, res) => {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/cart`,
+      success_url: `${process.env.FRONTEND_URL || 'https://e-commerce-bjhg.vercel.app'}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.FRONTEND_URL || 'https://e-commerce-bjhg.vercel.app'}/cart`,
       metadata: {
         userId: user._id.toString(),
         type: 'cart_checkout',
