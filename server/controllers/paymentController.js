@@ -27,14 +27,8 @@ exports.createPaymentIntent = async (req, res) => {
 exports.createCheckoutSession = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
-    console.log('Creating checkout session for productId:', productId, 'quantity:', quantity);
-
     const product = await Product.findById(productId);
-    console.log('Found product:', product);
-
-    const userId = await User.findOne({ firebaseUid: req.user.uid }).select('_id');
-    console.log('Found user ID:', userId);
-
+    const userId=await User.findOne({firebaseUid:req.user.uid}).select('_id')
     if (!product) return res.status(404).json({ message: 'Product not found' });
     if (product.stock < quantity) {
       return res.status(400).json({ message: 'Not enough stock available' });
@@ -61,7 +55,6 @@ exports.createCheckoutSession = async (req, res) => {
       }
     });
 
-    console.log('Stripe session created:', session.id);
     res.json({ id: session.id });
   } catch (err) {
     console.log("err", err.message);

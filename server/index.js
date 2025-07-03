@@ -4,28 +4,22 @@ const cors = require('cors');
 const Product = require('./models/Product');
 require('dotenv').config();
 
+
+// Initialize Firebase client-side verification (bypasses Admin SDK issues)
 require('./config/firebase-client');
 
 const app = express();
+
+
 app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
-const corsOptions = {
-  origin: [
-    'https://e-commerce-bjhg-git-main-sanchay-baghels-projects.vercel.app',
-    'https://e-commerce-bjhg.vercel.app',
-    'http://localhost:3000'
-  ],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 204,
-  allowedHeaders: 'Content-Type,Authorization'
-};
 
-// Handle preflight requests explicitly
-app.options('* ', cors(corsOptions));
-
-app.use(cors(corsOptions));
+app.use(cors({
+  origin:'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
+
 
 
 app.get('/', (req, res) => {
@@ -43,7 +37,7 @@ app.use('/api/products', require('./routes/product'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/shopkeeper', require('./routes/Admin'));
 app.use('/api/user', require('./routes/user'));
-app.use('/api/payment', require('./routes/payment'));
+// app.use('/api/payment', require('./routes/payment'));
 app.use('/api/orders', require('./routes/order'));
 
 
