@@ -38,7 +38,7 @@ app.use('/api/products', require('./routes/product'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/shopkeeper', require('./routes/Admin'));
 app.use('/api/user', require('./routes/user'));
-// app.use('/api/payment', require('./routes/payment'));
+app.use('/api/payment', require('./routes/payment'));
 app.use('/api/orders', require('./routes/order'));
 
 
