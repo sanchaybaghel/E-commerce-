@@ -105,9 +105,9 @@ function HomePage() {
         </p>
       </div>
 
-      {/* Search and Filters */}
+      
       <div className="bg-white rounded-2xl shadow-soft p-6 mb-8">
-        {/* Search */}
+       
         <form onSubmit={handleSearch} className="mb-6">
           <div className="relative max-w-2xl mx-auto">
             <input
@@ -131,7 +131,7 @@ function HomePage() {
           </div>
         </form>
 
-        {/* Filters */}
+        
         <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
           <form onSubmit={handleFilter} className="flex flex-wrap gap-3 items-center">
             <select
@@ -257,7 +257,7 @@ function HomePage() {
                     <img
                       src={product.images?.[0] || product.image || '/placeholder-image.jpg'}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
 
