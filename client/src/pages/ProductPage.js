@@ -99,7 +99,7 @@ function ProductPage() {
           <img
             src={mainImage}
             alt="Main Product"
-            className="w-full h-64 object-cover rounded mb-4"
+            className="w-full h-64 object-contain rounded mb-4"
           />
           <div className="flex gap-2 mb-4">
             {product.images.map((img, idx) => (
@@ -107,7 +107,7 @@ function ProductPage() {
                 key={idx}
                 src={img}
                 alt={`Product ${idx + 1}`}
-                className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${mainImage === img ? 'border-blue-600' : 'border-transparent'}`}
+                className={`w-20 h-20 object-contain rounded cursor-pointer border-2 ${mainImage === img ? 'border-blue-600' : 'border-transparent'}`}
                 onClick={() => setMainImage(img)}
               />
             ))}
@@ -116,7 +116,7 @@ function ProductPage() {
       )}
     
       {!product.images?.length && product.image && (
-        <img src={product.image} alt="Product" className="w-full h-64 object-cover rounded mb-4" />
+        <img src={product.image} alt="Product" className="w-full h-64 object-contain rounded mb-4" />
       )}
       <h2 className="text-2xl font-bold mb-2">{product.name}</h2>
       {averageRating && (
