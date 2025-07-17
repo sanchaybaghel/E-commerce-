@@ -11,6 +11,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
+  console.log("enter login page")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
