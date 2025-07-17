@@ -15,17 +15,18 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log("form",form);
     try {
       const userCredential = await login(form.email, form.password);
       console.log("userCredential",userCredential);
       const token = await userCredential.user.getIdToken();
+      console.log("token",token);
       await axios.post(
         '/api/auth/set-cookie',
         { token },
         { withCredentials: true }
       );
 
-    
       const res = await syncUser();
       const userFromBackend = res.data.user;
 
