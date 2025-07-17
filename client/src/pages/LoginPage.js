@@ -21,8 +21,7 @@ function LoginPage() {
       const userCredential = await login(form.email, form.password);
 
       // Step 2: Get the Firebase ID token
-      console.log("user",userCredential.user)
-      const token = await userCredential.user.getIdToken();
+      console.log("user",userCredential.user.accessToken)
 
       if (!token) {
         throw new Error("No token retrieved from Firebase!");
