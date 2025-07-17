@@ -43,6 +43,7 @@ exports.syncUser = async (req, res) => {
   }
 };
 exports.setCookie = async (req, res) => {
+  console.log("enter into setCookie")
   try {
     const { token } = req.body;
     res.cookie('token', token, {
