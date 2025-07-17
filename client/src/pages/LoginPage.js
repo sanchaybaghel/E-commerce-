@@ -33,7 +33,12 @@ function LoginPage() {
       await axios.post(
         '/api/auth/set-cookie',
         { token },
-        { withCredentials: true }
+        { 
+          withCredentials: true,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
       );
 
       // Step 4: Sync user with backend
