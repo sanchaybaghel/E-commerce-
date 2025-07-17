@@ -11,6 +11,7 @@ function CartPage() {
   const fetchCart = async () => {
     try {
       const res = await getCart();
+      console.log("res",res.data)
       setCart(res.data.cart || []);
     } catch (error) {
       console.error('Error fetching cart:', error);
@@ -24,6 +25,7 @@ function CartPage() {
 
   const handleRemove = async (productId) => {
     try {
+     
       await removeFromCart(productId);
       fetchCart();
     } catch (error) {

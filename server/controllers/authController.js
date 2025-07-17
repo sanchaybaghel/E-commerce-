@@ -43,17 +43,15 @@ exports.syncUser = async (req, res) => {
   }
 };
 exports.setCookie = async (req, res) => {
-  console.log("enter into setCookie")
   try {
     const { token } = req.body;
-    console.log("token",token)
     res.cookie('token', token, {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
       maxAge: 15 * 60 * 60 * 1000
     });
-    console.log("cookie",res.cookie)
+   
     res.json({ message: 'Cookie set successfully' });
   } catch (error) {
     console.log("error", error.message);

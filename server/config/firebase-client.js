@@ -2,7 +2,7 @@ let axios;
 try {
   axios = require('axios');
 } catch (error) {
-  console.log("error",error)
+  console.log("Axios import error:", error.message);
   console.log('⚠️  Axios not available, using fallback token validation only');
 }
 
@@ -12,9 +12,10 @@ const firebaseConfig = {
 };
 
 async function verifyFirebaseIdToken(idToken) {
-
   if (axios && process.env.FIREBASE_WEB_API_KEY) {
     try {
+     // console.log("idToken:", idToken);
+
       const response = await axios.post(
         `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.FIREBASE_WEB_API_KEY}`,
         { idToken: idToken },
@@ -25,20 +26,26 @@ async function verifyFirebaseIdToken(idToken) {
         }
       );
 
+      //console.log("response:", response.data);
+
       if (response.data && response.data.users && response.data.users.length > 0) {
         const user = response.data.users[0];
         return {
           uid: user.localId,
           email: user.email,
-          email_verified: user.emailVerified === 'true',
+          email_verified: user.emailVerified === true, // ✅ FIXED (was comparing to string)
           name: user.displayName || user.email.split('@')[0]
         };
       } else {
         throw new Error('Invalid token');
       }
     } catch (error) {
+      console.log("Google API error:", error.message);
+      if (error.response && error.response.data) {
+        console.log("Google error response:", error.response.data);
+      }
       console.log('Google API verification failed, using fallback...');
-      throw error; // Propagate the error instead of silently falling back
+      // No rethrow here to allow fallback
     }
   }
 
@@ -70,6 +77,7 @@ async function verifyFirebaseIdToken(idToken) {
       name: payload.name || payload.email?.split('@')[0] || 'User'
     };
   } catch (decodeError) {
+    console.log('Fallback decoding failed:', decodeError.message);
     throw new Error('Token verification failed');
   }
 }

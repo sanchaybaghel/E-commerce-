@@ -4,6 +4,7 @@ const Order = require('../models/Order');
 const { messaging } = require('firebase-admin');
 
 exports.addToCart = async (req, res) => {
+  console.log("enter into addToCart")
   try {
     const userId = req.user.uid || req.user.id;
     const { productId, quantity } = req.body;
@@ -72,13 +73,17 @@ exports.viewCart = async (req, res) => {
 };
 
 exports.removeFromCart = async (req, res) => {
+ // console.log("enter into removeFromCart")
   try {
     const userId = req.user.uid || req.user.id;
     const { productId } = req.params;
+   // console.log("productId",productId)
+    //console.log("userId",userId)
   const user = await User.findOne({ firebaseUid: req.user.uid }).populate('cart.product');
     if (!user) return res.status(404).json({ message: 'User not found' });
-
-    user.cart = user.cart.filter(item => item.product.toString() !== productId);
+    //console.log("user",user)
+    user.cart = user.cart.filter(item => item.product._id.toString() !== productId);
+    //console.log("user.cart",user.cart)
     await user.save();
     res.json({ cart: user.cart });
   } catch (err) {
