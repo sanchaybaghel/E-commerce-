@@ -1,4 +1,14 @@
 import axios from "./axios"
 export const syncUser = () => {
-  return axios.post('/api/auth/sync-user', {token:localStorage.getItem("token")}, { withCredentials: true });
+  const token = localStorage.getItem("token");
+  return axios.post(
+    '/api/auth/sync-user',
+    {}, // No need to send token in body
+    {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    }
+  );
 };
