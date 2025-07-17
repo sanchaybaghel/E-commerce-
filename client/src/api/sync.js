@@ -3,7 +3,7 @@ export const syncUser = () => {
   const token = localStorage.getItem("token");
   return axios.post(
     '/api/auth/sync-user',
-    {}, // No need to send token in body
+    {token:token}, // No need to send token in body
     {
       withCredentials: true,
       headers: {
