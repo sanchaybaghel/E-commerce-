@@ -16,34 +16,43 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("form",form);
+    console.log("handleSubmit called");
+    console.log("form", form);
+
     try {
+      // Step 1: Authenticate with Firebase
       const userCredential = await login(form.email, form.password);
-      console.log("userCredential",userCredential);
+      console.log("userCredential", userCredential);
+
+      // Step 2: Get the Firebase ID token
       const token = await userCredential.user.getIdToken();
-      console.log("token",token);
-      await axios.post(
+      console.log("token", token);
+
+      if (!token) {
+        throw new Error("No token retrieved from Firebase!");
+      }
+
+      // Step 3: Send token to backend to set cookie
+      const response = await axios.post(
         '/api/auth/set-cookie',
         { token },
         { withCredentials: true }
       );
+      console.log("set-cookie response", response);
 
+      // Step 4: Sync user with backend
       const res = await syncUser();
       const userFromBackend = res.data.user;
 
-     
       localStorage.setItem('user', JSON.stringify(userFromBackend));
       setUser(userFromBackend);
-      console.log("user",userFromBackend)
-
       toast.success('Login successful!');
       setLoading(false);
       navigate('/');
     } catch (err) {
-      toast.error(
-        err.response?.data?.message || 'Login failed. Try again.'
-      );
       setLoading(false);
+      console.error("Login error:", err);
+      toast.error(err.response?.data?.message || err.message || "Login failed");
     }
   };
 
