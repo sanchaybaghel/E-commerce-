@@ -1,6 +1,6 @@
 const express = require('express');
 const { getProfile, updateProfile, addAddress, removeAddress, addToWishlist, removeFromWishlist, getWishlist, getOrders } = require('../controllers/userController');
-const { getOrderById } = require('../controllers/orderController'); // Add this import
+const { getOrderById } = require('../controllers/orderController'); 
 const firebaseAuth = require('../middleware/auth');
 
 const router = express.Router();
@@ -13,6 +13,6 @@ router.post('/wishlist', firebaseAuth, addToWishlist);
 router.delete('/wishlist/:productId', firebaseAuth, removeFromWishlist);
 router.get('/wishlist', firebaseAuth, getWishlist);
 router.get('/orders', firebaseAuth, getOrders);
-router.get('/orders/:id', firebaseAuth, getOrderById); // Add this line
+router.get('/orders/:id', firebaseAuth, getOrderById);
 
 module.exports = router;

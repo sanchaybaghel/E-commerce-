@@ -17,19 +17,17 @@ function LoginPage() {
     try {
       const userCredential = await login(form.email, form.password);
       const token = await userCredential.user.getIdToken();
-
-      // Set httpOnly cookie with token
       await axios.post(
         '/api/auth/set-cookie',
         { token },
         { withCredentials: true }
       );
 
-      // Sync with backend to get full user info (including role)
+    
       const res = await syncUser();
       const userFromBackend = res.data.user;
 
-      // Save user info to localStorage and context 
+     
       localStorage.setItem('user', JSON.stringify(userFromBackend));
       setUser(userFromBackend);
       console.log("user",userFromBackend)

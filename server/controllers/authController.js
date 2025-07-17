@@ -4,11 +4,10 @@ exports.syncUser = async (req, res) => {
   try {
     const { uid, email } = req.user; 
     const name = req.body.name;
-    const incomingRole = req.body.role; // role sent from frontend (optional)
+    const incomingRole = req.body.role; 
     let user = await User.findOne({ firebaseUid: uid });
 
     if (!user) {
-      // Only set role on creation, default to customer if not provided
       user = new User({
         firebaseUid: uid,
         name: name || '',
@@ -20,10 +19,9 @@ exports.syncUser = async (req, res) => {
       });
       await user.save();
     } else {
-      // Only update name/email, NOT role unless explicitly sent and different
+      
       if (req.body.name && req.body.name !== user.name) user.name = req.body.name;
       if (email && email !== user.email) user.email = email;
-      // Only update role if a new role is sent and it's different
       if (incomingRole && incomingRole !== user.role) user.role = incomingRole;
       await user.save();
     }
@@ -44,3 +42,27 @@ exports.syncUser = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+exports.setCookie = async (req, res) => {
+  try {
+    const { token } = req.body;
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 60 * 1000
+    });
+    res.json({ message: 'Cookie set successfully' });
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+exports.logout=async(req,res)=>{
+  try{
+    res.clearCookie('token');
+    res.json({message:'Logout successful'})
+  }catch(error){
+    console.log("error",error)
+    res.status(500).json({message:error.message})
+  }
+}
