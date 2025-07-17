@@ -11,34 +11,29 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
-  console.log("enter login page")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("handleSubmit called");
-    console.log("form", form);
 
     try {
       // Step 1: Authenticate with Firebase
       const userCredential = await login(form.email, form.password);
-      console.log("userCredential", userCredential);
 
       // Step 2: Get the Firebase ID token
+      console.log("user",userCredential.user)
       const token = await userCredential.user.getIdToken();
-      console.log("token", token);
 
       if (!token) {
         throw new Error("No token retrieved from Firebase!");
       }
 
       // Step 3: Send token to backend to set cookie
-      const response = await axios.post(
+      await axios.post(
         '/api/auth/set-cookie',
         { token },
         { withCredentials: true }
       );
-      console.log("set-cookie response", response);
 
       // Step 4: Sync user with backend
       const res = await syncUser();
