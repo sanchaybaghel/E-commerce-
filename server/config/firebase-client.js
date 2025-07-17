@@ -15,9 +15,8 @@ async function verifyFirebaseIdToken(idToken) {
 
   if (axios && process.env.FIREBASE_WEB_API_KEY) {
     try {
-
       const response = await axios.post(
-        `https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=${process.env.FIREBASE_WEB_API_KEY}`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.FIREBASE_WEB_API_KEY}`,
         { idToken: idToken },
         {
           headers: {
@@ -39,6 +38,7 @@ async function verifyFirebaseIdToken(idToken) {
       }
     } catch (error) {
       console.log('Google API verification failed, using fallback...');
+      throw error; // Propagate the error instead of silently falling back
     }
   }
 
@@ -53,7 +53,6 @@ async function verifyFirebaseIdToken(idToken) {
   }
 
   try {
-
     const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
 
     if (!payload.aud || payload.aud !== firebaseConfig.projectId) {
@@ -76,9 +75,6 @@ async function verifyFirebaseIdToken(idToken) {
 }
 
 function initializeFirebase() {
-  console.log("prces",process.env)
-  console.log("process.env.FIREBASE_PROJECT_ID",process.env.FIREBASE_PROJECT_ID)
-  console.log("process.env.FIREBASE_WEB_API_KEY",process.env.FIREBASE_WEB_API_KEY)
   if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_WEB_API_KEY) {
     firebaseConfig.projectId = process.env.FIREBASE_PROJECT_ID;
     firebaseConfig.initialized = true;
