@@ -1,4 +1,4 @@
-import './utils/firebase'; // <-- This initializes Firebase
+import './utils/firebase';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
