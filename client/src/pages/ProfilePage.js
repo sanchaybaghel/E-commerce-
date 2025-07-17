@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getProfile, updateProfile, addAddress, removeAddress } from '../api/user';
+import axios from '../api/axios';
 
 function ProfilePage() {
   const [profile, setProfile] = useState(null);
