@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { login } from '../api/auth';
 import { syncUser } from '../api/sync'; 
+import axios from '../api/axios';
 
 function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
