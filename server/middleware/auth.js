@@ -2,17 +2,16 @@ const { verifyIdToken, isInitialized } = require('../config/firebase-client');
 
 const firebaseAuth = async (req, res, next) => {
   if (!isInitialized()) {
-    console.log("Firebase not initialized",isInitialized())
     return res.status(500).json({ message: 'Firebase not properly configured on the server.' });
   }
-  const token = req.headers.authorization?.split(' ')[1];
+  // Try to get token from cookie first, fallback to header
+  const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ message: 'No token provided' });
   try {
     const decoded = await verifyIdToken(token);
     req.user = decoded;
     next();
   } catch (err) {
-    console.error('Firebase auth error:', err.message);
     res.status(401).json({ message: 'Invalid token' });
   }
 };

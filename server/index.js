@@ -10,6 +10,9 @@ require('./config/firebase-client');
 
 const app = express();
 
+// Add cookie-parser middleware
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
