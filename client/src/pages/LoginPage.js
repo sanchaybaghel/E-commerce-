@@ -21,9 +21,7 @@ function LoginPage() {
       const userCredential = await login(form.email, form.password);
 
       // Step 2: Get the Firebase ID token
-      const token=userCredential.user.accessToken;
-      console.log("user",userCredential.user.accessToken)
-      console.log("token",token)
+      const token = await userCredential.user.getIdToken();
 
       if (!token) {
         throw new Error("No token retrieved from Firebase!");
@@ -36,7 +34,8 @@ function LoginPage() {
         { 
           withCredentials: true,
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
         }
       );
@@ -48,12 +47,11 @@ function LoginPage() {
       localStorage.setItem('user', JSON.stringify(userFromBackend));
       setUser(userFromBackend);
       toast.success('Login successful!');
-      setLoading(false);
       navigate('/');
     } catch (err) {
-      setLoading(false);
-      console.error("Login error:", err);
       toast.error(err.response?.data?.message || err.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
