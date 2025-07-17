@@ -18,12 +18,18 @@ function LoginPage() {
       const userCredential = await login(form.email, form.password);
       const token = await userCredential.user.getIdToken();
 
+      // Set httpOnly cookie with token
+      await axios.post(
+        '/api/auth/set-cookie',
+        { token },
+        { withCredentials: true }
+      );
+
       // Sync with backend to get full user info (including role)
-      const res = await syncUser(token); // <-- this should call /api/auth/sync-user
+      const res = await syncUser();
       const userFromBackend = res.data.user;
 
-      // Save to localStorage and context
-      localStorage.setItem('token', token);
+      // Save user info to localStorage and context 
       localStorage.setItem('user', JSON.stringify(userFromBackend));
       setUser(userFromBackend);
       console.log("user",userFromBackend)
@@ -40,15 +46,15 @@ function LoginPage() {
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-xl font-bold mb-4">Login</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-sm mx-auto mt-14 p-8 bg-white rounded-xl shadow-lg flex flex-col items-center">
+      <h2 className="text-2xl font-extrabold mb-6 text-primary-700 tracking-tight">Sign in to your account</h2>
+      <form onSubmit={handleSubmit} className="w-full space-y-5">
         <input
           type="email"
           placeholder="Email"
           value={form.email}
           onChange={e => setForm({ ...form, email: e.target.value })}
-          className="p-2 border rounded w-full"
+          className="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
         <input
@@ -56,17 +62,30 @@ function LoginPage() {
           placeholder="Password"
           value={form.password}
           onChange={e => setForm({ ...form, password: e.target.value })}
-          className="p-2 border rounded w-full"
+          className="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
+        <div className="flex justify-end mb-2">
+          <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">Forgot password?</Link>
+        </div>
         <button
-          className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+          className="bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold px-4 py-2 rounded-lg w-full shadow"
           disabled={loading}
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      or <Link to={"/forgot-password"}>Forgot Password</Link>
+      <div className="flex items-center w-full my-6">
+        <div className="flex-grow border-t border-gray-200"></div>
+        <span className="mx-3 text-gray-400">or</span>
+        <div className="flex-grow border-t border-gray-200"></div>
+      </div>
+      <Link
+        to="/register"
+        className="w-full text-center bg-gray-100 hover:bg-gray-200 transition-colors text-blue-700 font-semibold px-4 py-2 rounded-lg border border-blue-200 shadow"
+      >
+        Sign up for an account
+      </Link>
     </div>
   );
 }

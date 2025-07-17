@@ -261,7 +261,6 @@ function HomePage() {
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
 
-                    {/* Quick Add to Cart Button */}
                     <button
                       onClick={(e) => handleAddToCart(product._id, e)}
                       className="absolute bottom-2 right-2 btn-primary btn-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"

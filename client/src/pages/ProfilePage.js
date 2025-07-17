@@ -40,8 +40,10 @@ function ProfilePage() {
     getProfile().then(res => setProfile(res.data));
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
+  const handleLogout = async () => {
+    await axios.post('/api/auth/logout', {}, { withCredentials: true });
+    localStorage.removeItem('user');
+    setProfile(null);
     window.location.href = '/login';
   };
 
