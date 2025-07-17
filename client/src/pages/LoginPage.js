@@ -16,6 +16,7 @@ function LoginPage() {
     setLoading(true);
     try {
       const userCredential = await login(form.email, form.password);
+      console.log("userCredential",userCredential);
       const token = await userCredential.user.getIdToken();
       await axios.post(
         '/api/auth/set-cookie',
